@@ -52,7 +52,7 @@ node {
             
         }
         
-          stage('Push To Test Org') {
+          //stage('Push To Test Org') {
               //if (isUnix()) {
                     //rc = sh returnStatus: true, script: "\"${toolbelt}\" force:source:push --targetusername ${SFDC_USERNAME}"
               //}else{
@@ -64,12 +64,12 @@ node {
 			
 			// assign permset
             //rc = bat returnStatus: true, script: "${toolbelt}/sfdx force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname DreamHouse"
-            rc = bat returnStatus: true, script: "\"${toolbelt}\" force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname DreamHouse"
-            if (rc != 0) {
-                error 'permset:assign failed'
-            }
+            //rc = bat returnStatus: true, script: "\"${toolbelt}\" force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname DreamHouse"
+            //if (rc != 0) {
+            //    error 'permset:assign failed'
+            //}
             
-          }
+          //}
 
 		  stage('Run Apex Test') {
 				bat "mkdir -p ${RUN_ARTIFACT_DIR}"
