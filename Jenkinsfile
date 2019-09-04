@@ -4,7 +4,7 @@ node {
 
     def BUILD_NUMBER=env.BUILD_NUMBER
     //def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
-    def RUN_ARTIFACT_DIR="tests\\"${BUILD_NUMBER}
+    def RUN_ARTIFACT_DIR="tests/"${BUILD_NUMBER}
     def SFDC_USERNAME="test-whnmqw0e9his@example.com"
 
     def HUB_ORG=env.HUB_ORG_DH
