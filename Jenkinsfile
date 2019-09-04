@@ -3,7 +3,8 @@ import groovy.json.JsonSlurperClassic
 node {
 
     def BUILD_NUMBER=env.BUILD_NUMBER
-    def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
+    //def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
+    def RUN_ARTIFACT_DIR="tests\${BUILD_NUMBER}"
     def SFDC_USERNAME="test-whnmqw0e9his@example.com"
 
     def HUB_ORG=env.HUB_ORG_DH
@@ -72,7 +73,8 @@ node {
           //}
 
 		  stage('Run Apex Test') {
-				bat "mkdir -p ${RUN_ARTIFACT_DIR}"
+				//bat "mkdir -p ${RUN_ARTIFACT_DIR}"
+				bat "mkdir ${RUN_ARTIFACT_DIR}"
 				timeout(time: 120, unit: 'SECONDS') {
                 //rc = bat returnStatus: true, script: "${toolbelt}/sfdx force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat tap --targetusername ${SFDC_USERNAME}"
                 rc = bat returnStatus: true, script: "\"${toolbelt}\" force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat tap --targetusername ${SFDC_USERNAME}"
