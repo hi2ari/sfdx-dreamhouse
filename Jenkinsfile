@@ -69,8 +69,13 @@ node {
 				//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:apex:test:report -i ${SFDC_TESTRUNID} --resultformat human --json"
 				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:report -i ${SFDC_TESTRUNID} --resultformat human --json"
 			}
-			
-		}
+	println('Hello from a Job DSL script5!')
+            println(rmsg)
+            def beginIndex = rmsg.indexOf('{')
+	    println(beginIndex)
+            def endIndex = rmsg.indexOf('}')
+            println(endIndex)		
+	}
 		
 		stage('collect results') {
             junit keepLongStdio: true, testResults: 'tests/**/*-junit.xml'
