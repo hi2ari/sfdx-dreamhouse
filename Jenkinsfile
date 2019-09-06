@@ -58,6 +58,7 @@ node {
 	if (robj.status != 0) { error 'Apex test run failed: ' + robj.message }
 	            SFDC_TESTRUNID = robj.result.summary.testRunId
 			println(robj.result.summary.testRunId)
+			println SFDC_TESTRUNID
 		}
 		
 		stage('collect results') {
