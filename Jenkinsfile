@@ -5,7 +5,7 @@ node {
     //def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
 	def RUN_ARTIFACT_DIR="tests\\%BUILD_NUMBER%"
     //def SFDC_USERNAME="test-whnmqw0e9his@example.com"
-	def SFDC_USERNAME
+	def SFDC_USERNAME="test-73cjo4bujk8z@example.com"
 	def SFDC_TESTRUNID
 	
 	def HUB_ORG=env.HUB_ORG_DH
