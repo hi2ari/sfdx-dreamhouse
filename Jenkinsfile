@@ -79,6 +79,8 @@ node {
             println(jsobSubstring)
 	def jsonSlurper = new JsonSlurperClassic()
             def robj = jsonSlurper.parseText(jsobSubstring)
+		if (robj.status != 0) { error 'Apex test run failed: ' + robj.message }
+	            robj=null
 	}
 		
 		stage('collect results') {
