@@ -42,7 +42,7 @@ node {
 				bat "mkdir ${RUN_ARTIFACT_DIR}"
 				timeout(time: 120, unit: 'SECONDS') {
 				//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat tap --targetusername ${SFDC_USERNAME}"
-				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat tap --json --targetusername ${SFDC_USERNAME}"
+				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:run --testlevel RunLocalTests --outputdir \"${RUN_ARTIFACT_DIR}\" --resultformat tap --json --targetusername ${SFDC_USERNAME}"
 				}
 			}
 			printf rmsg
