@@ -45,7 +45,21 @@ node {
 				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat tap --json --targetusername ${SFDC_USERNAME}"
 				}
 			}
-			
+			printf rmsg
+            println('Hello from a Job DSL script4!')
+            println(rmsg)
+            def beginIndex = rmsg.indexOf('{')
+            def endIndex = rmsg.indexOf('}')
+            println(beginIndex)
+            println(endIndex)
+            def jsobSubstring = rmsg.substring(beginIndex)
+            println(jsobSubstring)
+            
+            def jsonSlurper = new JsonSlurperClassic()
+            def robj = jsonSlurper.parseText(jsobSubstring)
+            if (robj.status != 0) { error 'Apex test run failed: ' + robj.message }
+            SFDC_TESTRUNID=robj.summary.testRunId
+			robj = null
 		}
 		stage ('Apex Test Report') {
 		if (isUnix()){
