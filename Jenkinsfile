@@ -51,7 +51,8 @@ node {
 	    println(beginIndex)
             def endIndex = rmsg.indexOf('}')
             println(endIndex)
-            
+            def jsobSubstring = rmsg.substring(beginIndex)
+            println(jsobSubstring)
 		}
 		
 		stage('collect results') {
