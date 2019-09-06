@@ -47,6 +47,10 @@ node {
 			}
 			println('Hello from a Job DSL script4!')
             println(rmsg)
+            def beginIndex = rmsg.indexOf('{')
+	    println(beginIndex)
+            def endIndex = rmsg.indexOf('}')
+            println(endIndex)
             
 		}
 		
