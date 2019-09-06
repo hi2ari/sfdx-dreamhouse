@@ -69,20 +69,7 @@ node {
 				//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:apex:test:report -i ${SFDC_TESTRUNID} --resultformat human --json"
 				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:report -i ${SFDC_TESTRUNID} --resultformat human --json"
 			}
-			printf rmsg
-            println('Hello from a Job DSL script!')
-            println(rmsg)
-            def beginIndex = rmsg.indexOf('{')
-            def endIndex = rmsg.indexOf('}')
-            println(beginIndex)
-            println(endIndex)
-            def jsobSubstring = rmsg.substring(beginIndex)
-            println(jsobSubstring)
-            
-            def jsonSlurper = new JsonSlurperClassic()
-            def robj = jsonSlurper.parseText(jsobSubstring)
-            if (robj.status != 0) { error 'Apex test report failed: ' + robj.message }
-			robj = null
+			
 		}
 		
 		stage('collect results') {
