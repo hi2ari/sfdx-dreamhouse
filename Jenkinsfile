@@ -59,6 +59,8 @@ node {
 	            SFDC_TESTRUNID = robj.result.summary.testRunId
 			println(robj.result.summary.testRunId)
 			println SFDC_TESTRUNID
+			robj=null
+			
 		}
 		
 		stage('collect results') {
