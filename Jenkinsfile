@@ -45,7 +45,10 @@ node {
 				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat tap --json --targetusername ${SFDC_USERNAME}"
 				}
 			}
-			}
+			println('Hello from a Job DSL script4!')
+            println(rmsg)
+            
+		}
 		
 		stage('collect results') {
             junit keepLongStdio: true, testResults: 'tests/**/*-junit.xml'
