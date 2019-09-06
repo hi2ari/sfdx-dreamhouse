@@ -45,44 +45,8 @@ node {
 				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:run --testlevel RunLocalTests --outputdir ${RUN_ARTIFACT_DIR} --resultformat tap --json --targetusername ${SFDC_USERNAME}"
 				}
 			}
-			printf rmsg
-            println('Hello from a Job DSL script3!')
-            println(rmsg)
-            def beginIndex = rmsg.indexOf('{')
-            def endIndex = rmsg.indexOf('}')
-            println(beginIndex)
-            println(endIndex)
-            def jsobSubstring = rmsg.substring(beginIndex)
-            println(jsobSubstring)
-            
-            def jsonSlurper = new JsonSlurperClassic()
-            def robj = jsonSlurper.parseText(jsobSubstring)
-            if (robj.status != 0) { error 'permset assignment failed: ' + robj.message }
-            SFDC_TESTRUNID=robj.result.summary.testRunId
-			robj = null
-		}
-		stage ('Apex Test Report') {
-		if (isUnix()){
-				//rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:apex:test:report -i {SFDC_TESTRUNID} --resultformat human --json
-			}else{
-				//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:apex:test:report -i ${SFDC_TESTRUNID} --resultformat human --json"
-				rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:report -i ${SFDC_TESTRUNID} --resultformat human --json"
 			}
-			printf rmsg
-            println('Hello from a Job DSL script!')
-            println(rmsg)
-            def beginIndex = rmsg.indexOf('{')
-            def endIndex = rmsg.indexOf('}')
-            println(beginIndex)
-            println(endIndex)
-            def jsobSubstring = rmsg.substring(beginIndex)
-            println(jsobSubstring)
-            
-            def jsonSlurper = new JsonSlurperClassic()
-            def robj = jsonSlurper.parseText(jsobSubstring)
-            if (robj.status != 0) { error 'Apex test report failed: ' + robj.message }
-			robj = null
-		}
+		
 		stage('collect results') {
             junit keepLongStdio: true, testResults: 'tests/**/*-junit.xml'
         }
