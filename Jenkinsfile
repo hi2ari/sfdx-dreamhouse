@@ -74,7 +74,11 @@ node {
             def beginIndex = rmsg.indexOf('{')
 	    println(beginIndex)
             def endIndex = rmsg.indexOf('}')
-            println(endIndex)		
+            println(endIndex)
+		def jsobSubstring = rmsg.substring(beginIndex)
+            println(jsobSubstring)
+	def jsonSlurper = new JsonSlurperClassic()
+            def robj = jsonSlurper.parseText(jsobSubstring)
 	}
 		
 		stage('collect results') {
