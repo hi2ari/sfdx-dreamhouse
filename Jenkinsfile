@@ -46,7 +46,7 @@ node {
 				}
 			}
 			printf rmsg
-            println('Hello from a Job DSL script4!')
+            println('Hello from a Job DSL script3!')
             println(rmsg)
             def beginIndex = rmsg.indexOf('{')
             def endIndex = rmsg.indexOf('}')
@@ -57,8 +57,8 @@ node {
             
             def jsonSlurper = new JsonSlurperClassic()
             def robj = jsonSlurper.parseText(jsobSubstring)
-            if (robj.status != 0) { error 'Apex test run failed: ' + robj.message }
-            SFDC_TESTRUNID=robj.summary.testRunId
+            if (robj.status != 0) { error 'permset assignment failed: ' + robj.message }
+            SFDC_TESTRUNID=robj.result.summary.testRunId
 			robj = null
 		}
 		stage ('Apex Test Report') {
