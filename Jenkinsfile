@@ -23,7 +23,7 @@ node {
         checkout scm
     }
 	withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')])
-	{
+	{	sh 'use $jwt_key_file'
 		withEnv(["HOME=${env.WORKSPACE}"]) 
 		{
 				
