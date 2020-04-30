@@ -22,8 +22,8 @@ node {
         // when running in multi-branch job, one must issue this command
         checkout scm
     }
-	withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')])
-	{	sh 'use $jwt_key_file'
+	withCredentials([file(credentialsId: 'ae00b413-b7ca-48c5-adf3-7cf7925f152b', variable: 'jwt_key_file')])
+	{	//sh 'use $jwt_key_file'
 		withEnv(["HOME=${env.WORKSPACE}"]) 
 		{
 				
