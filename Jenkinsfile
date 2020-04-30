@@ -23,7 +23,8 @@ node {
         checkout scm
     }
 	//withCredentials([string(credentialsId: 'd9d28aff-707f-4e57-a912-7777787fbd1d', variable: 'jwt_key_file')]) 
-	withCredentials([file(credentialsId: 'ae00b413-b7ca-48c5-adf3-7cf7925f152b', variable: 'jwt_key_file')])
+	//withCredentials([file(credentialsId: 'ae00b413-b7ca-48c5-adf3-7cf7925f152b', variable: 'jwt_key_file')])
+	withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')])
 	{	//sh 'use $jwt_key_file'
 		withEnv(["HOME=${env.WORKSPACE}"]) 
 		{
@@ -42,7 +43,7 @@ node {
 				if (isUnix()) {
 				  rmsg = sh returnStdout: true, script: "${toolbelt} force:org:create --definitionfile config/enterprise-scratch-def.json --json --setdefaultusername"
 				}else{
-					rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:org:create --definitionfile config/project-scratch-def.json --json --setdefaultusername --setalias ciorg --wait 10 --durationdays 1"
+					rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:org:create --definitionfile config/project-scratch-def.json --json --setdefaultusername"
 				}
 				printf rmsg
 				println('Hello from a Job DSL script1!')
