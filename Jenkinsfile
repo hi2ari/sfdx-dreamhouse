@@ -11,7 +11,7 @@ node {
 	
 	def HUB_ORG=env.SF_LOGINID
     def SFDC_HOST=env.SF_URL
-    def JWT_KEY_CRED_ID=env.SERVER_KEY_CREDENTALS_ID
+    def JWT_KEY_CRED_ID=env.SERVER_KEY_CREDENTALS_ID1
     def CONNECTED_APP_CONSUMER_KEY=env.SF_CONSUMER_KEY
 	def toolbelt = tool 'toolbelt'
 	
@@ -22,6 +22,7 @@ node {
         // when running in multi-branch job, one must issue this command
         checkout scm
     }
+	//withCredentials([string(credentialsId: 'd9d28aff-707f-4e57-a912-7777787fbd1d', variable: 'jwt_key_file')]) 
 	withCredentials([file(credentialsId: 'ae00b413-b7ca-48c5-adf3-7cf7925f152b', variable: 'jwt_key_file')])
 	{	//sh 'use $jwt_key_file'
 		withEnv(["HOME=${env.WORKSPACE}"]) 
@@ -31,7 +32,8 @@ node {
 				if (isUnix()) {
 					rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
 				}else{
-					rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${JWT_KEY_CRED_ID}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+					//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${JWT_KEY_CRED_ID}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+					rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
 				}
 				if (rc != 0) { error 'hub org authorization failed' }
 			}
