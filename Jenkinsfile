@@ -11,7 +11,7 @@ node {
 	
 	def HUB_ORG=env.SF_LOGINID
     def SFDC_HOST=env.SF_URL
-    def JWT_KEY_CRED_ID=env.SERVER_KEY_CREDENTALS_ID1
+    def JWT_KEY_CRED_ID=env.SERVER_KEY_CREDENTALS_ID
     def CONNECTED_APP_CONSUMER_KEY=env.SF_CONSUMER_KEY
 	def toolbelt = tool 'toolbelt'
 	
