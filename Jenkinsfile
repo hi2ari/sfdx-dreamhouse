@@ -46,7 +46,7 @@ node {
 				if (isUnix()) {
 				  rmsg = sh returnStdout: true, script: "${toolbelt} force:org:create --definitionfile config/enterprise-scratch-def.json --json --setdefaultusername"
 				}else{
-					rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:org:create --targetdevhubusername DevHub --setdefaultusername --definitionfile config/project-scratch-def.json --json"
+					rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:org:create --targetdevhubusername ${HUB_ORG} --setdefaultusername --definitionfile config/project-scratch-def.json --json"
 				}
 				printf rmsg
 				println('Hello from a Job DSL script1!')
