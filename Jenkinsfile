@@ -27,10 +27,10 @@ node {
 			stage('Authorize DevHub') 
 			{
 				//Log out of the org account
-                rc0 = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout --targetusername ${SF_USERNAME} --noprompt"
-                if (rc0 != 0) {
-                    error 'logout error.'
-                }
+              //  rc0 = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout --targetusername ${SF_USERNAME} --noprompt"
+              //  if (rc0 != 0) {
+              //      error 'logout error.'
+              //  }
 				//Authorize DevHub
 				if (isUnix()) {
 					rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
