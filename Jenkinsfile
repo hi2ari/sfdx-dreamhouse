@@ -4,44 +4,54 @@ node {
 	def BUILD_NUMBER=env.BUILD_NUMBER
     //def RUN_ARTIFACT_DIR="tests/${BUILD_NUMBER}"
 	def RUN_ARTIFACT_DIR="tests\\%BUILD_NUMBER%"
-    //def SFDC_USERNAME="test-whnmqw0e9his@example.com"
-	//def SFDC_USERNAME="test-73cjo4bujk8z@example.com"
 	def SFDC_USERNAME
 	def SFDC_TESTRUNID
 	
 	def HUB_ORG=env.SF_LOGINID
-    def SFDC_HOST=env.SF_URL
-    def JWT_KEY_CRED_ID=env.SERVER_KEY_CREDENTALS_ID
-    def CONNECTED_APP_CONSUMER_KEY=env.SF_CONSUMER_KEY
+	def SFDC_HOST=env.SF_URL
+	def JWT_KEY_CRED_ID=env.SERVER_KEY_CREDENTALS_ID
+	def CONNECTED_APP_CONSUMER_KEY=env.SF_CONSUMER_KEY
 	def toolbelt = tool 'toolbelt'
 	
 	println 'KEY IS' 
     println JWT_KEY_CRED_ID
 	
 	stage('checkout source') {
-        // when running in multi-branch job, one must issue this command
-        checkout scm
-    }
-	//withCredentials([string(credentialsId: 'd9d28aff-707f-4e57-a912-7777787fbd1d', variable: 'jwt_key_file')]) 
-	//withCredentials([file(credentialsId: 'ae00b413-b7ca-48c5-adf3-7cf7925f152b', variable: 'jwt_key_file')])
-	//withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')])
-	//{	//sh 'use $jwt_key_file'
-		withEnv(["HOME=${env.WORKSPACE}"]) 
-		{
-			withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
-				
-			stage('Authorize DevHub') {
+		// when running in multi-branch job, one must issue this command
+		checkout scm
+	}
+	withEnv(["HOME=${env.WORKSPACE}"]) 
+	{
+		withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')])
+		{	
+			stage('Authorize DevHub') 
+			{
+				//Log out of the org account
+                rc0 = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout --targetusername ${SF_USERNAME} --noprompt"
+                if (rc0 != 0) {
+                    error 'logout error.'
+                }
+				//Authorize DevHub
 				if (isUnix()) {
 					rc = sh returnStatus: true, script: "${toolbelt} force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
 				}else{
-					//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${JWT_KEY_CRED_ID}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
 					rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername -a DevHub --instanceurl ${SFDC_HOST}"
-					//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"C:\\Users\\pwcuser\\JWT\\server.key\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-					//rc = command "\"${toolbelt}\"/sfdx force:auth:jwt:grant --instanceurl ${SFDC_HOST} --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --setalias HubOrg"
+					if (rc != 0) { error 'hub org authorization failed' }
 				}
-				if (rc != 0) { error 'hub org authorization failed' }
-			}
-			stage('Create Scratch Org'){
+				//Make the DevHub the default org
+				rc1 = bat returnStatus: true, script: "\"${toolbelt}\" force:config:set defaultusername=${HUB_ORG} defaultdevhubusername=${HUB_ORG} --global"
+                 if (rc1 != 0) {
+                    error 'Salesforce dev hub org is not the default org'
+                }
+				//List the orgs
+				rc2 = bat returnStatus: true, script: "\"${toolbelt}\" force:org:list"
+                if (rc2 != 0) {
+                    error 'not the default org'
+                }
+            }
+			
+			stage('Create Scratch Org')
+			{
 				 // need to pull out assigned username
 				if (isUnix()) {
 				  rmsg = sh returnStdout: true, script: "${toolbelt} force:org:create --definitionfile config/enterprise-scratch-def.json --json --setdefaultusername"
@@ -64,7 +74,9 @@ node {
 				SFDC_USERNAME=robj.result.username
 				robj = null
 			}
-			stage('Push To Test Org') {
+			
+			stage('Push To Test Org') 
+			{
 				if (isUnix()) {
 					rc = sh returnStatus: true, script: "${toolbelt} force:source:push --json --targetusername ${SFDC_USERNAME}"
 				}else{
@@ -87,13 +99,14 @@ node {
 				if (robj.status != 0) { error 'push failed: ' + robj.message }
 				robj = null
 			}
-			stage('Assign Permset') {
+			stage('Assign Permset') 
+			{
 				//assign permset
 				if (isUnix()) {
 					rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname DreamHouse"
 				}else{
 					//rc = bat returnStatus: true, script: "\"${toolbelt}\" force:user:permset:assign --targetusername ${SFDC_USERNAME} --permsetname DreamHouse"
-					rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:user:permset:assign --json --targetusername ${SFDC_USERNAME} --permsetname sfdx-jenkins-ci"
+					rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:user:permset:assign --json --targetusername ${SFDC_USERNAME} --permsetname dreamhouse"
 				}
 				printf rmsg
 				println('Hello from a Job DSL script3!')
@@ -110,7 +123,8 @@ node {
 				if (robj.status != 0) { error 'permset assignment failed: ' + robj.message }
 				robj = null
 			}
-			stage ('Import Data') {
+			stage ('Import Data') 
+			{
 				if (isUnix()) {
 					rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:data:tree:import --plan data/sample-data-plan.json --json"
 				}else{
@@ -133,7 +147,8 @@ node {
 				//SFDC_TESTRUNID = robj.result.summary.testRunId
 				robj = null
 			}
-		stage ('Run Apex Tests') {
+		stage ('Run Apex Tests') 
+		{
 				if (isUnix()){
 					sh "mkdir -p ${RUN_ARTIFACT_DIR}"
 					timeout(time: 120, unit: 'SECONDS') {
@@ -163,7 +178,8 @@ node {
 				robj=null
 				
 			}
-		stage ('Apex Test Report') {
+		stage ('Apex Test Report') 
+		{
 			if (isUnix()){
 					//rc = sh returnStatus: true, script: "${toolbelt}/sfdx force:apex:test:report -i ${SFDC_TESTRUNID} --resultformat human --json
 				}else{
