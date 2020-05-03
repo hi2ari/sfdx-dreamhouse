@@ -84,7 +84,7 @@ node {
             		// -------------------------------------------------------------------------
 
 			    stage('Display Test Scratch Org') {
-				rc = bat returnstatus: true, script: "\"${toolbelt}\" force:org:display --targetusername {SFDC_USERNAME}"
+				rc = bat returnStatus: true, script: "\"${toolbelt}\" force:org:display --targetusername {SFDC_USERNAME}"
 				if (rc != 0) {
 				    error 'Salesforce test scratch org display failed.'
 				}
