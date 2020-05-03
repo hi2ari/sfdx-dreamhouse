@@ -31,9 +31,9 @@ node {
                 if (rc0 != 0) {
                     error 'logout error.'
                 }
-				rc0 = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout --targetusername learn31createorg@gmail.com --noprompt"
-                if (rc0 != 0) {
-			error 'logout error.'}
+		//rc0 = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout --targetusername learn31createorg@gmail.com --noprompt"
+                //if (rc0 != 0) {
+		//	error 'logout error.'}
 				
 				//Authorize DevHub
 				if (isUnix()) {
@@ -218,6 +218,12 @@ node {
 			
 			stage('collect results') {
 				junit keepLongStdio: true, testResults: 'tests/**/*-junit.xml'
+			}
+			
+			stage('Open Org') {
+				rc = bat returnStdout: true, script: "\"${toolbelt}\" force:org:open"
+				if (rc != 0) {
+				    error 'Error opening org.'	
 			}
 		}
 	}
