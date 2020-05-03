@@ -27,7 +27,7 @@ node {
 			stage('Authorize DevHub') 
 			{
 				//Log out of the org account
-                rc0 = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout --targetusername ${SF_USERNAME} --noprompt"
+                rc0 = bat returnStatus: true, script: "\"${toolbelt}\" force:auth:logout --targetusername ${HUB_ORG} --noprompt"
                 if (rc0 != 0) {
                     error 'logout error.'
                 }
