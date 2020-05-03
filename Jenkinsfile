@@ -223,7 +223,7 @@ node {
 			stage('Open Org') {
 				rc = bat returnStdout: true, script: "\"${toolbelt}\" force:org:open"
 				if (rc != 0) {
-				    error 'Error opening org.'	
+					error 'Error opening org.'	}
 			}
 		}
 	}
